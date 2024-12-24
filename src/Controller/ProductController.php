@@ -24,7 +24,7 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/new', name: 'app_product_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, Telegram $telegram): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
@@ -33,8 +33,6 @@ final class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($product);
             $entityManager->flush();
-
-            $telegram->send('Create a new product with id: ' . $product->getId());
 
             return $this->redirectToRoute('app_product_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -72,11 +70,9 @@ final class ProductController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_product_delete', methods: ['POST'])]
-    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager, Telegram $telegram): Response
+    public function delete(Request $request, Product $product, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$product->getId(), $request->getPayload()->getString('_token'))) {
-            $telegram->send('Delete product with id: ' . $product->getId());
-
             $entityManager->remove($product);
             $entityManager->flush();
         }

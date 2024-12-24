@@ -6,9 +6,11 @@ use Telegram\Bot\Api;
 
 class Telegram
 {
-    public function __construct(protected Api $telegram)
-    {
+    protected $telegram;
 
+    public function __construct($token)
+    {
+        $this->telegram = new Api($token);
     }
 
     public function send($message): int
