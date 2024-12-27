@@ -2,14 +2,12 @@
 namespace App\EventListener;
 
 use App\Entity\Product;
-use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
-use Doctrine\ORM\Event\PostPersistEventArgs;
-use Doctrine\ORM\Event\PreRemoveEventArgs;
 use App\Service\Telegram;
-use Doctrine\Persistence\Event\LifecycleEventArgs;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use App\Event\ProductEvents;
 
-#[AsEntityListener(event: 'preRemove', method: 'onPreRemove', entity: Product::class)]
-#[AsEntityListener(event: 'postPersist', method: 'onPostPersist', entity: Product::class)]
+#[AsEventListener(event: ProductEvents::CREATED, method: 'onAddProduct')]
+#[AsEventListener(event: ProductEvents::DELETED, method: 'onDeleteProduct')]
 class ProductListener
 {
     private Telegram $telegram;
@@ -19,13 +17,17 @@ class ProductListener
         $this->telegram = $telegram;
     }
 
-    public function onPreRemove(Product $product, PreRemoveEventArgs $event): void
+    public function onAddProduct(ProductEvents $event): void
     {
-        $this->telegram->send('Deleted product: ' . $product->getId());
+        $product = $event->getProduct();
+
+        $this->telegram->send('Create product with id: ' . $product->getId());
     }
 
-    public function onPostPersist(Product $product, PostPersistEventArgs $eventArgs): void
+    public function onDeleteProduct(ProductEvents $event): void
     {
-        $this->telegram->send('New product: ' . $product->getId());
+        $product = $event->getProduct();
+
+        $this->telegram->send('Delete product with id: ' . $product->getId());
     }
 }
