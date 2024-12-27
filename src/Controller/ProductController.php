@@ -6,7 +6,6 @@ use App\Entity\Product;
 use App\Event\ProductEvents;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
-use App\Service\Telegram;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;

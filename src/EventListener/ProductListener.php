@@ -1,7 +1,6 @@
 <?php
 namespace App\EventListener;
 
-use App\Entity\Product;
 use App\Service\Telegram;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use App\Event\ProductEvents;
